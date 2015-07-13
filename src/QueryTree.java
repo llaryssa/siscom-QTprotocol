@@ -18,34 +18,40 @@ public class QueryTree {
 			folder = "tags" + (g+1) + "/";
 			
 			for (int i = 100; i <= 1000; i += 100) {
-				String path_in = folder + i + "tags/tags.in";
-				String path_out = folder + i + "tags/tags.out";
-				arq = new Arquivo(path_in, path_out);
-				
-				tags = new String[i];
-				for (int j = 0; j < i; ++j) {
-					tags[j] = arq.readString();
+				for (int sim = 0; sim < 20; ++sim) {
+					String path_in = folder + i + "tags/tags" + (sim+1) + ".in";
+					String path_out = folder + i + "tags/tags.out";
+					arq = new Arquivo(path_in, path_out);
+					
+					tags = new String[i];
+					for (int j = 0; j < i; ++j) {
+						tags[j] = arq.readString();
+					}
+					// tags lidas
+					
+					
+					M = new Vector<String>();  // Memory (ja lidas)
+					Q = new Vector<String>();  // Query queue
+					
+					Q.add("");
+					
+					while (!Q.isEmpty()) {
+	//					String prefix = Q.remove(Q.size()-1);
+						String prefix = Q.remove(0); // assim o QT shortcut nao falha 
+	//					System.out.println("take: " + prefix);
+						query_tree_shortcut(prefix);
+					}
+					
+//					System.out.println("M size: " + M.size());
+					for (int m = 0; m < M.size(); ++m) {
+						arq.println(M.get(m));
+					}
+					arq.close();
+					System.out.print("*");
 				}
-				// tags lidas
-				
-				
-				M = new Vector<String>();  // Memory (ja lidas)
-				Q = new Vector<String>();  // Query queue
-				
-				Q.add("");
-				
-				while (!Q.isEmpty()) {
-					String prefix = Q.remove(Q.size()-1);
-//					System.out.println("take: " + prefix);
-					query_tree(prefix);
-				}
-				
-				System.out.println("M size: " + M.size());
-				for (int m = 0; m < M.size(); ++m) {
-					arq.println(M.get(m));
-				}
-				arq.close();
+				System.out.println();
 			}
+			System.out.println();
 		}
 	
 		System.out.println("finished");
