@@ -1,5 +1,15 @@
+import info.monitorenter.gui.chart.Chart2D;
+import info.monitorenter.gui.chart.ITrace2D;
+import info.monitorenter.gui.chart.traces.Trace2DSimple;
+
+import java.util.Iterator;
+import java.util.Random;
 import java.util.Vector;
 
+import javax.swing.JFrame;
+
+import org.math.*;
+import org.math.plot.Plot2DPanel;
 public class QueryTree {
 	
 	static Vector<String> M;
@@ -8,7 +18,7 @@ public class QueryTree {
 	static String temp;
 
 	public static void main(String[] args) {
-		
+		testGraph();
 		long start = System.nanoTime();
 		
 		Arquivo arq;		
@@ -59,9 +69,39 @@ public class QueryTree {
 		
 		long end = System.nanoTime();
 		
+		
+		// Iterator<String> it = M.iterator();
+		// while(it.hasNext())System.out.println(it.next());
+		
 		System.out.println((end - start)/1000000 + "ms");
+		
+		
 
 	}
+	
+	public static void testGraph(){
+		 // Create a chart:  
+	    Chart2D chart = new Chart2D();
+	    // Create an ITrace: 
+	    ITrace2D trace = new Trace2DSimple(); 
+	    // Add the trace to the chart. This has to be done before adding points (deadlock prevention): 
+	    chart.addTrace(trace);    
+	    // Add all points, as it is static: 
+	    Random random = new Random();
+	    for(int i=100;i>=0;i--){
+	      trace.addPoint(i,random.nextDouble()*10.0+i);
+	    }
+	    // Make it visible:
+	    // Create a frame.
+	    JFrame frame = new JFrame("MinimalStaticChart");
+	    // add the chart to the frame: 
+	    frame.getContentPane().add(chart);
+	    frame.setSize(400,300);
+	    // Enable the termination button [cross on the upper right edge]: 
+	    
+	    frame.setVisible(true);
+	}
+	
 	
 	public static void query_tree (String prefix) {
 		int result = query(prefix);
