@@ -8,8 +8,6 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 
-import org.math.*;
-import org.math.plot.Plot2DPanel;
 public class QueryTree {
 	
 	static Vector<String> M;
