@@ -9,8 +9,6 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 
-import sun.awt.X11.XAbstractMenuItem;
-
 public class QueryTree {
 
 	static Vector<String> M;
@@ -24,12 +22,18 @@ public class QueryTree {
 	static Vector<Double> colisoesTag = new Vector<Double>();
 	static Vector<Double> vaziosTag = new Vector<Double>();
 	static Vector<Double> sucessosTag = new Vector<Double>();
+	static Vector<Double> slotsgraph = new Vector<Double>();
+	
 	static double colisoes;
 	static double sucessos;
 	static double vazios;
+	static double[][] totalcolisoes = new double[3][10];
+	static double[][] totalsucessos=new double[3][10];
+	static double[][] totalvazios=new double[3][10];
+	static double [][] totalslots = new double[3][10];
 
 	public static void main(String[] args) {
-		
+
 		long start = System.nanoTime();
 
 		Arquivo arq;
@@ -40,6 +44,7 @@ public class QueryTree {
 			colisoesgraph = new Vector<Double>();
 			sucessosgraph = new Vector<Double>();
 			vaziosgraph = new Vector<Double>();
+			slotsgraph=new Vector<Double>();
 			xgraph = new Vector<Double>();
 			for (int q = 100; q <= 1000; q += 100) {// para gada quantidade de
 													// tags
@@ -68,7 +73,7 @@ public class QueryTree {
 						String prefix = Q.remove(0); // assim o QT shortcut nao
 														// falha
 						// System.out.println("take: " + prefix);
-						query_tree(prefix);
+						 query_tree(prefix);
 						//query_tree_shortcut(prefix);
 					}
 
@@ -90,44 +95,105 @@ public class QueryTree {
 				colisoesgraph.add(mediaColisoes);
 				sucessosgraph.add(mediaSucessos);
 				vaziosgraph.add(mediaVazios);
+				slotsgraph.add(mediaColisoes+mediaSucessos+mediaVazios);
 				System.out.println();
 			}// finalizou teste
 				// desenhando graficos;
-			JFrame frame = new JFrame("Teste" + (teste+1));
+			/*
+			JFrame frame = new JFrame("Teste" + (teste + 1));
 			Chart2D chart = new Chart2D();
 			frame.getContentPane().add(chart);
-			chart.setBackground(new Color(255,255,255));
+			chart.setBackground(new Color(255, 255, 255));
 			
-			
-			showGraph("Sucessos", vectorToArray(xgraph), vectorToArray(sucessosgraph), new Color(0, 0, 255),
-					chart);
-			showGraph("Colisoes", vectorToArray(xgraph), vectorToArray(colisoesgraph), new Color(255, 0, 0),
-					chart);
-			showGraph("Vazios", vectorToArray(xgraph), vectorToArray(vaziosgraph), new Color(0, 255, 0),
-					chart);
-			frame.setSize(600,  400);
+			showGraph("Sucessos", vectorToArray(xgraph),
+					vectorToArray(sucessosgraph), new Color(0, 0, 255), chart);
+			showGraph("Colisoes", vectorToArray(xgraph),
+					vectorToArray(colisoesgraph), new Color(255, 0, 0), chart);
+			showGraph("Vazios", vectorToArray(xgraph),
+					vectorToArray(vaziosgraph), new Color(0, 255, 0), chart);
+			frame.setSize(600, 400);
 			frame.setVisible(true);
+			*/
+			totalcolisoes[teste] = vectorToArray(colisoesgraph);
+			totalvazios[teste]=vectorToArray(vaziosgraph);
+			totalsucessos[teste] = vectorToArray(sucessosgraph);
+			totalslots[teste] = vectorToArray(slotsgraph);
+			
 
 			System.out.println();
 		}
+		
+		JFrame frame = new JFrame("Sucesso");
+		Chart2D chart = new Chart2D();
+		frame.getContentPane().add(chart);
+		chart.setBackground(new Color(255, 255, 255));
+		
+		showGraph("Teste1", vectorToArray(xgraph),
+				totalsucessos[0], new Color(0, 0, 255), chart);
+		showGraph("Teste2", vectorToArray(xgraph),
+				totalsucessos[1], new Color(255, 0, 0), chart);
+		showGraph("Teste3", vectorToArray(xgraph),
+				totalsucessos[2], new Color(0, 255, 0), chart);
+		frame.setSize(600, 400);
+		frame.setVisible(true);
+		
+		
+		JFrame frame2 = new JFrame("Vazios");
+		Chart2D chart2 = new Chart2D();
+		frame2.getContentPane().add(chart2);
+		chart2.setBackground(new Color(255, 255, 255));
+		
+		
+		showGraph("Teste1", vectorToArray(xgraph),
+				totalvazios[0], new Color(0, 0, 255), chart2);
+		showGraph("Teste2", vectorToArray(xgraph),
+				totalvazios[1], new Color(255, 0, 0), chart2);
+		showGraph("Teste3", vectorToArray(xgraph),
+				totalvazios[2], new Color(0, 255, 0), chart2);
+		frame2.setSize(600, 400);
+		frame2.setVisible(true);
+		
+		JFrame frame3 = new JFrame("Colisoes");
+		Chart2D chart3 = new Chart2D();
+		frame3.getContentPane().add(chart3);
+		chart3.setBackground(new Color(255, 255, 255));
+		showGraph("Teste1", vectorToArray(xgraph),
+				totalcolisoes[0], new Color(0, 0, 255), chart3);
+		showGraph("Teste2", vectorToArray(xgraph),
+				totalcolisoes[1], new Color(255, 0, 0), chart3);
+		showGraph("Teste3", vectorToArray(xgraph),
+				totalcolisoes[2], new Color(0, 255, 0), chart3);
+		frame3.setSize(600, 400);
+		frame3.setVisible(true);
+	
+
+		JFrame frame4 = new JFrame("Slots");
+		Chart2D chart4 = new Chart2D();
+		frame4.getContentPane().add(chart4);
+		chart4.setBackground(new Color(255, 255, 255));
+		showGraph("Teste1", vectorToArray(xgraph),
+				totalslots[0], new Color(0, 0, 255), chart4);
+		showGraph("Teste2", vectorToArray(xgraph),
+				totalslots[1], new Color(255, 0, 0), chart4);
+		showGraph("Teste3", vectorToArray(xgraph),
+				totalslots[2], new Color(0, 255, 0), chart4);
+		frame4.setSize(600, 400);
+		frame4.setVisible(true);
 
 		System.out.println("finished");
-
 		long end = System.nanoTime();
-
 		// Iterator<String> it = M.iterator();
 		// while(it.hasNext())System.out.println(it.next());
-
 		System.out.println((end - start) / 1000000 + "ms");
-
 	}
-	public static  double[] vectorToArray(Vector<Double> vector){
+
+	public static double[] vectorToArray(Vector<Double> vector) {
 		int t = vector.size();
-		double [] array = new double[t];
-		for(int i =0;i<t;i++){
+		double[] array = new double[t];
+		for (int i = 0; i < t; i++) {
 			array[i] = vector.elementAt(i);
 		}
-			return array;
+		return array;
 	}
 
 	public static void showGraph(String title, double[] xa, double[] ya,
@@ -139,7 +205,10 @@ public class QueryTree {
 		chart.addTrace(trace);
 		for (int i = 0; i < xa.length; i++) {
 			trace.addPoint(xa[i], ya[i]);
+			System.out.print(xa[i] + " ");
 		}
+		System.out.println();
+
 	}
 
 	public static void testGraph2() {
@@ -177,6 +246,17 @@ public class QueryTree {
 		frame.setVisible(true);
 	}
 
+	public static int query(String prefix) {
+		int result = 0;
+		for (int i = 0; i < tags.length && result <= 2; ++i) {
+			if (tags[i].startsWith(prefix)) {
+				result++;
+				temp = tags[i];
+			}
+		}
+		return result;
+	}
+
 	public static void query_tree(String prefix) {
 		int result = query(prefix);
 		if (result > 1) { // deu colisao
@@ -190,17 +270,6 @@ public class QueryTree {
 			// idle
 			vazios++;
 		}
-	}
-
-	public static int query(String prefix) {
-		int result = 0;
-		for (int i = 0; i < tags.length && result <= 2; ++i) {
-			if (tags[i].startsWith(prefix)) {
-				result++;
-				temp = tags[i];
-			}
-		}
-		return result;
 	}
 
 	public static void query_tree_shortcut(String prefix) {
